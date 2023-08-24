@@ -1,0 +1,282 @@
+# Status
+
+Selamat datang di dokumentasi Status API. API ini memungkinkan pengguna membuat dan mengelola cerita yang bertahan selama 24 jam. Pengguna juga dapat melihat cerita yang dibuat oleh pengguna lain yang kontaknya disimpan.
+
+## The status model
+
+Model status menyimpan semua informasi yang terkait dengan cerita yang dibuat oleh pengguna. Pengguna dapat membuat, menerima, dan melihat cerita pengguna lain yang kontaknya disimpan. Pembuat cerita juga akan menerima informasi tentang jumlah penonton yang telah melihat cerita mereka.
+
+### Properties
+
+<Properties>
+  <Property name="id" type="string">
+    Pengidentifikasi unik untuk setiap cerita.
+  </Property>
+  <Property name="contact_id" type="string">
+    Pengidentifikasi unik untuk kontak lain dalam cerita.
+  </Property>
+  <Property name="status_type" type="string">
+    Jenis cerita yang dibuat, bisa berupa teks, audio, atau media (foto atau
+    video).
+  </Property>
+  <Property name="media_url" type="string">
+    URL untuk cerita yang dibuat.
+  </Property>
+  <Property name="media_type" type="string">
+    Jenis cerita berbasis media. Bisa berupa gambar atau video.
+  </Property>
+  <Property name="created_at" type="timestamp">
+    Stempel waktu saat cerita dibuat.
+  </Property>
+  <Property name="is_muted" type="boolean">
+    Apakah ceritanya diredam atau tidak.
+  </Property>
+  <Property name="muted_at" type="timestamp">
+    Stempel waktu saat cerita dibisukan.
+  </Property>
+</Properties>
+
+---
+
+## List All Status {{ tag: 'GET', label: '/v1/status' }}
+
+<Row>
+  <Col>
+
+Titik akhir ini memungkinkan Anda mengambil daftar semua cerita kontak Anda (dalam percakapan jika ID percakapan disediakan). Secara default, maksimal sepuluh cerita ditampilkan per halaman.
+
+    ### Optional attributes
+
+    <Properties>
+      <Property name="status_id" type="string">
+       Batasi pada cerita dari percakapan tertentu.
+      </Property>
+      <Property name="limit" type="integer">
+       Batasi jumlah cerita yang dikembalikan.
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="GET" label="/v1/status">
+
+    ```js
+    import ApiClient from '@example/protocol-api'
+
+    const client = new ApiClient(token)
+
+    await client.status.list()
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    {
+      "received_stories":
+        {
+          "user_id": "abc123",
+          "is_muted" : false,
+          "stories": [
+            {
+              "status_id": "story1",
+              "status_type" : "media", // "text", "voice"
+              "media_url": "https://example.com/stories/story1.jpg",
+              "media_type": "image", // "video"
+              "duration": 10,
+              "posted_at": "2023-08-21T08:00:00Z",
+              "is_viewed" : true
+            },
+            {
+              "status_id": "story2",
+              "status_type" : "text", // "media", "voice"
+              "media_url": null,
+              "media_type": null,
+              "duration": 10,
+              "posted_at": "2023-08-21T09:00:00Z",
+              "is_viewed" : false
+            },
+          ]
+        },
+
+      {
+          "user_id": "def456",
+          "is_muted" : true,
+          "stories": [
+            //
+          ],
+
+      },
+    }
+    ```
+
+  </Col>
+</Row>
+
+---
+
+## Create a Status {{ tag: 'POST', label: '/v1/status/:id' }}
+
+<Row>
+  <Col>
+
+Titik akhir ini memungkinkan Anda mengirim status baru ke kontak Anda.
+
+    ### Required attributes
+
+    <Properties>
+      <Property name="statuses" type="object">
+       Pengidentifikasi unik untuk status Anda.
+      </Property>
+      <Property name="status_id" type="string">
+        Isi pesan.
+      </Property>
+      <Property name="viewers" type="object">
+       Pemirsa status.
+      </Property>
+      <Property name="total_views" type="integer">
+        Total number of viewers for the status.
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="POST" label="/v1/status">
+
+    ```js
+    import ApiClient from '@example/protocol-api'
+
+    const client = new ApiClient(token)
+
+    await client.status.create({
+      "statuses": {
+        "status_id":"abc123"
+      },
+    })
+
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    {
+      "statuses": [
+        {
+          "status_id": "story1",
+          "status_type" : "media", // "text", "voice"
+          "media_url": "https://example.com/stories/story1.jpg",
+          "media_type": "image", // "video"
+          "duration": 10,
+          "posted_at": "2023-08-21T08:00:00Z",
+          "viewers": ["user2", "user3"],
+          "total_views": 35
+        },
+        {
+          "status_id": "story2",
+          "status_type" : "text", // "media", "voice"
+          "media_url": null,
+          "media_type": null,
+          "duration": 10,
+          "posted_at": "2023-08-21T09:00:00Z",
+          "viewers": ["user2", "user3"],
+          "total_views": 30
+        },
+      ]
+
+    ```
+
+  </Col>
+</Row>
+---
+
+## Retrieve a Status {{ tag: 'GET', label: '/v1/status/:id' }}
+
+<Row>
+  <Col>
+
+    Titik akhir ini memungkinkan Anda mengambil status dengan memberikan ID pengguna. Lihat [daftar](#the-status-model) di bagian atas halaman ini untuk melihat properti mana yang disertakan dengan objek status.
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="GET" label="/v1/status">
+
+    ```js
+    import ApiClient from '@example/protocol-api'
+
+    const client = new ApiClient(token)
+
+    await client.status.list()
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    {
+      "received_statuses":
+        {
+          "user_id": "abc123",
+          "is_muted" : false,
+          "statuses": [
+            {
+              "status_id": "story1",
+              "status_type" : "media", // "text", "voice"
+              "media_url": "https://example.com/stories/story1.jpg",
+              "media_type": "image", // "video"
+              "duration": 10,
+              "posted_at": "2023-08-21T08:00:00Z",
+              "is_viewed" : true
+            },
+            {
+              "status_id": "story2",
+              "status_type" : "text", // "media", "voice"
+              "media_url": null,
+              "media_type": null,
+              "duration": 10,
+              "posted_at": "2023-08-21T09:00:00Z",
+              "is_viewed" : false
+            },
+          ]
+        },
+
+      {
+          "user_id": "def456",
+          "is_muted" : true,
+          "statuses": [
+            //
+          ],
+
+      },
+    }
+    ```
+
+  </Col>
+</Row>
+
+---
+
+## Delete a Status {{ tag: 'DELETE', label: '/v1/status/:id' }}
+
+<Row>
+  <Col>
+
+Titik akhir ini memungkinkan Anda menghapus status dari cerita Anda. Catatan: Tindakan ini akan menghapus status secara permanen.
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="DELETE" label="/v1/status/abc123">
+
+    ```js
+    import ApiClient from '@example/protocol-api'
+
+    const client = new ApiClient(token)
+
+    await client.status.delete('abc123')
+    ```
+
+    </CodeGroup>
+
+  </Col>
+</Row>

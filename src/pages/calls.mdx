@@ -1,0 +1,176 @@
+# Calls API Documentation
+
+Selamat datang di dokumentasi Calls API. API ini memungkinkan pengguna untuk membuat dan mengelola panggilan suara dan video. Pengguna dapat melakukan panggilan, menerima panggilan masuk, dan mengelola riwayat panggilan.
+
+## Call Model
+
+Model panggilan menyimpan semua informasi terkait panggilan yang dilakukan oleh pengguna.
+
+### Properties
+
+<Properties>
+  <Property name="call_id" type="string">
+    Pengidentifikasi unik untuk setiap panggilan.
+  </Property>
+  <Property name="contact_id" type="string">
+    ID pengguna dari kontak yang dipanggil.
+  </Property>
+  <Property name="type" type="string">
+    Jenis panggilan, bisa "suara" atau "video".
+  </Property>
+  <Property name="start_time" type="timestamp">
+    Stempel waktu saat panggilan dimulai.
+  </Property>
+  <Property name="end_time" type="timestamp">
+    Stempel waktu saat panggilan diakhiri.
+  </Property>
+  <Property name="metadata" type="object">
+    Metadata tambahan tentang panggilan tersebut.
+  </Property>
+</Properties>
+
+---
+
+## Make a Call {{ tag: 'POST', label: '/v1/calls' }}
+
+<Row>
+  <Col>
+
+    Titik akhir ini memungkinkan Anda memulai panggilan baru.
+
+    ### Required attributes
+
+    <Properties>
+      <Property name="contact_id" type="string">
+        ID pengguna dari kontak yang dipanggil.
+      </Property>
+      <Property name="type" type="string">
+       Jenis panggilannya, bisa berupa "suara" atau "video".
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="POST" label="/v1/calls">
+
+    ```js
+    import ApiClient from '@example/protocol-api'
+
+    const client = new ApiClient(token)
+
+    await client.calls.make({
+      "contact_id": "jj084",
+      "type": "voice"
+    })
+
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    {
+      "call_id": "oke2738",
+      "contact_id": "jj084",
+      "type": "voice",
+      "start_time": "2023-08-21T08:00:00Z",
+      "metadata": {}
+    }
+    ```
+
+  </Col>
+</Row>
+
+---
+
+## End a Call {{ tag: 'PATCH', label: '/v1/calls/:id' }}
+
+<Row>
+  <Col>
+
+    Titik akhir ini memungkinkan Anda mengakhiri panggilan yang sedang berlangsung.
+
+    ### Required attributes
+
+    <Properties>
+      <Property name="end_time" type="timestamp">
+        Stempel waktu saat panggilan diakhiri.
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="PATCH" label="/v1/calls/oke2738">
+
+    ```js
+    import ApiClient from '@example/protocol-api'
+
+    const client = new ApiClient(token)
+
+    await client.calls.end('oke2738', {
+      "end_time": "2023-08-21T08:10:00Z"
+    })
+    ```
+
+    </CodeGroup>
+
+  </Col>
+</Row>
+
+---
+
+## Get Call History {{ tag: 'GET', label: '/v1/calls/history' }}
+
+<Row>
+  <Col>
+
+Titik akhir ini memungkinkan Anda mengambil riwayat panggilan pengguna.
+
+    ### Optional attributes
+
+    <Properties>
+      <Property name="user_id" type="string">
+        ID pengguna untuk mengambil riwayat panggilan.
+      </Property>
+      <Property name="limit" type="integer">
+        Batasi jumlah catatan panggilan yang dikembalikan.
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="GET" label="/v1/calls/history">
+
+    ```js
+    import ApiClient from '@example/protocol-api'
+
+    const client = new ApiClient(token)
+
+    await client.calls.getHistory({
+      "user_id": "siap3943",
+      "limit": 10
+    })
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    {
+      "call_records": [
+        {
+          "call_id": "oke2738",
+          "contact_id": "jj084",
+          "type": "voice",
+          "start_time": "2023-08-21T08:00:00Z",
+          "end_time": "2023-08-21T08:10:00Z",
+          "metadata": {}
+        },
+        // More call records...
+      ]
+    }
+    ```
+
+  </Col>
+</Row>
