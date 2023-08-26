@@ -206,7 +206,6 @@ export const navigation = [
       { title: 'Attachments', href: '/attachments' },
       { title: 'Status', href: '/status' },
       { title: 'Calls', href: '/calls' },
-      { title: 'Business', href: '/business' },
     ],
   },
 ]
