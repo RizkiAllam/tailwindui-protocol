@@ -1,0 +1,159 @@
+# User API
+
+Selamat datang di dokumentasi User API WhatsApp. API ini memungkinkan Anda mengelola informasi dan interaksi pengguna dalam WhatsApp.
+
+## The User Models
+
+Model pengguna mencakup semua informasi yang terkait dengan pengguna WhatsApp. Anda dapat mengambil informasi pengguna, mengirim pesan, dan mengelola status.
+
+### Properties
+
+<Properties>
+  <Property name="id" type="string">
+    Pengidentifikasi unik untuk setiap pengguna.
+  </Property>
+  <Property name="name" type="string">
+    Nama pengguna.
+  </Property>
+  <Property name="phone_number" type="string">
+    Nomor telepon pengguna.
+  </Property>
+  <Property name="profile_image" type="string">
+    URL gambar profil pengguna.
+  </Property>
+  <Property name="status" type="string">
+    Status terkini pengguna (online, offline, sibuk, dsb.).
+  </Property>
+</Properties>
+
+---
+
+## list a user {{ tag: 'GET', label: '/v1/users' }}
+
+<Row>
+  <Col>
+
+Titik akhir ini memungkinkan Anda mengambil daftar pengguna WhatsApp yang tersedia.
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="GET" label="/v1/users">
+
+    ```js
+    import ApiClient from '@example/protocol-api'
+
+    const client = new ApiClient(token)
+
+    await client.users.list()
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    {
+      "users": [
+        {
+          "id": "user123",
+          "name": "John Doe",
+          "phone_number": "+62123456789",
+          "profile_image": "https://example.com/users/user123.jpg",
+          "status": "online"
+        },
+        {
+          "id": "user456",
+          "name": "Jane Smith",
+          "phone_number": "+62876543210",
+          "profile_image": "https://example.com/users/user456.jpg",
+          "status": "offline"
+        }
+      ]
+    }
+    ```
+
+  </Col>
+</Row>
+
+## Send message {{ tag: 'POST', label: '/v1/users/:id/messages' }}
+
+<Row>
+  <Col>
+
+Titik akhir ini memungkinkan Anda mengirim pesan ke pengguna melalui API WhatsApp.
+
+    ### Required attributes
+
+    <Properties>
+      <Property name="message" type="string">
+        Isi pesan yang akan dikirim.
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="POST" label="/v1/users/:id/messages">
+
+    ```js
+    import ApiClient from '@example/protocol-api'
+
+    const client = new ApiClient(token)
+
+    await client.users.sendMessage(userId, {
+      "message": "Halo! Ini adalah pesan dari API WhatsApp."
+    })
+
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    {
+      "message_status": "sent"
+    }
+    ```
+
+  </Col>
+</Row>
+
+## Manage Statuses {{ tag: 'POST', label: '/v1/users/:id/status' }}
+
+<Row>
+  <Col>
+
+Titik akhir ini memungkinkan Anda mengelola status pengguna WhatsApp.
+
+    ### Required attributes
+
+    <Properties>
+      <Property name="status" type="string">
+        Isi status yang akan ditambahkan atau diperbarui.
+      </Property>
+    </Properties>
+
+  </Col>
+  <Col sticky>
+
+    <CodeGroup title="Request" tag="POST" label="/v1/users/:id/status">
+
+    ```js
+    import ApiClient from '@example/protocol-api'
+
+    const client = new ApiClient(token)
+
+    await client.users.updateStatus(userId, {
+      "status": "Sedang sibuk dalam rapat."
+    })
+
+    ```
+
+    </CodeGroup>
+
+    ```json {{ title: 'Response' }}
+    {
+      "status_update": "success"
+    }
+    ```
+
+  </Col>
+</Row>
